@@ -52,13 +52,19 @@ class WatchComponent extends Component
                     'type' => 'embed',
                     'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => empty($this->videos) ? 'Dublado' : 'Player Alternativo']),
                 ];
-            }
-            if (config('settings.vidsrc') and $listing->tmdb_id) {
-                $rawLink = 'https://vsembed.ru/embed/movie/' . $listing->tmdb_id . '/color-' . $theme_color;
+
+                $rawLinkVs = 'https://vsembed.ru/embed/movie/' . $listing->tmdb_id . '/color-' . $theme_color;
                 $this->videos[] = [
                     'label' => 'Legendado',
                     'type' => 'embed',
-                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => 'Legendado']),
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLinkVs), 'label' => 'Legendado']),
+                ];
+
+                $rawLinkAuto = 'https://player.autoembed.co/embed/movie/' . $listing->tmdb_id;
+                $this->videos[] = [
+                    'label' => 'Multilinguagem',
+                    'type' => 'embed',
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLinkAuto), 'label' => 'Multilinguagem']),
                 ];
             }
         } elseif (isset($listing->post->type) AND $listing->post->type == 'tv') {
@@ -70,13 +76,19 @@ class WatchComponent extends Component
                     'type' => 'embed',
                     'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => empty($this->videos) ? 'Dublado' : 'Player Alternativo']),
                 ];
-            }
-            if (config('settings.vidsrc') and $listing->post->tmdb_id) {
-                $rawLink = 'https://vsembed.ru/embed/tv/' . $listing->post->tmdb_id . '/' . $listing->season_number . '-' . $listing->episode_number . '/color-' . $theme_color;
+
+                $rawLinkVs = 'https://vsembed.ru/embed/tv/' . $listing->post->tmdb_id . '/' . $listing->season_number . '-' . $listing->episode_number . '/color-' . $theme_color;
                 $this->videos[] = [
                     'label' => 'Legendado',
                     'type' => 'embed',
-                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => 'Legendado']),
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLinkVs), 'label' => 'Legendado']),
+                ];
+
+                $rawLinkAuto = 'https://player.autoembed.co/embed/tv/' . $listing->post->tmdb_id . '/' . $listing->season_number . '/' . $listing->episode_number;
+                $this->videos[] = [
+                    'label' => 'Multilinguagem',
+                    'type' => 'embed',
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLinkAuto), 'label' => 'Multilinguagem']),
                 ];
             }
         } elseif ($listing->type == 'tv') {
@@ -119,14 +131,19 @@ class WatchComponent extends Component
                     'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => 'Dublado']),
                 ];
 
-                if (config('settings.vidsrc')) {
-                    $rawLink = 'https://vsembed.ru/embed/tv/' . $listing->tmdb_id . '/' . $seasonNum . '-' . $episodeNum . '/color-' . $theme_color;
-                    $this->videos[] = [
-                        'label' => 'Legendado' . $epSuffix,
-                        'type' => 'embed',
-                        'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => 'Legendado']),
-                    ];
-                }
+                $rawLinkVs = 'https://vsembed.ru/embed/tv/' . $listing->tmdb_id . '/' . $seasonNum . '-' . $episodeNum . '/color-' . $theme_color;
+                $this->videos[] = [
+                    'label' => 'Legendado' . $epSuffix,
+                    'type' => 'embed',
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLinkVs), 'label' => 'Legendado']),
+                ];
+
+                $rawLinkAuto = 'https://player.autoembed.co/embed/tv/' . $listing->tmdb_id . '/' . $seasonNum . '/' . $episodeNum;
+                $this->videos[] = [
+                    'label' => 'Multilinguagem' . $epSuffix,
+                    'type' => 'embed',
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLinkAuto), 'label' => 'Multilinguagem']),
+                ];
             }
         }
     }

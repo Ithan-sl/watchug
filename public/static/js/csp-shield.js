@@ -43,6 +43,9 @@
         if (cleanUrl.startsWith('/') || cleanUrl.startsWith(window.location.origin) || cleanUrl.startsWith('javascript:')) {
             return false;
         }
+        if (cleanUrl.includes('mgeb.top') || cleanUrl.includes('vsembed.ru') || cleanUrl.includes('autoembed') || cleanUrl.includes('vidstack.io') || cleanUrl.includes('playercdn.xyz') || cleanUrl.includes('cloudflarestorage.com')) {
+            return false;
+        }
         for (var i = 0; i < AD_IDENTIFIERS.length; i++) {
             if (AD_IDENTIFIERS[i].test(cleanUrl)) {
                 return true;
