@@ -30,21 +30,25 @@ class SettingsServiceProvider extends ServiceProvider
     public function boot(Factory $cache, Settings $settings, Menu $menus)
     {
         if (env('APP_ENV') != 'install') {
-            $settings = $cache->rememberForever('settings', function () use ($settings) {
-                return $settings->pluck('val', 'name')->all();
-            });
-            config()->set('settings', $settings);
+            try {
+                $settings = $cache->rememberForever('settings', function () use ($settings) {
+                    return $settings->pluck('val', 'name')->all();
+                });
+                config()->set('settings', $settings);
 
 
-            $menus = Cache::rememberForever('menus', function () {
-                return Menu::where('status','active')->orderby('sortable','asc')->limit(16)->get();
-            });
-            config()->set('menus', $menus);
+                $menus = Cache::rememberForever('menus', function () {
+                    return Menu::where('status','active')->orderby('sortable','asc')->limit(16)->get();
+                });
+                config()->set('menus', $menus);
 
-            $pages = Cache::rememberForever('pages', function () {
-                return Page::where('featured','active')->where('status','publish')->orderby('id','desc')->limit(6)->get();
-            });
-            config()->set('pages', $pages);
+                $pages = Cache::rememberForever('pages', function () {
+                    return Page::where('featured','active')->where('status','publish')->orderby('id','desc')->limit(6)->get();
+                });
+                config()->set('pages', $pages);
+            } catch (\Throwable $e) {
+                // Ignore DB connection errors during build or when DB is temporarily unreachable
+            }
         }
     }
 }

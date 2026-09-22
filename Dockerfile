@@ -42,9 +42,9 @@ COPY . /var/www/html
 
 # Install dependencies and optimize autoload
 RUN if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then \
-        composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader; \
+        composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts; \
     else \
-        composer dump-autoload --optimize --no-dev; \
+        composer dump-autoload --optimize --no-dev --no-scripts; \
     fi
 
 # Copy entrypoint script
