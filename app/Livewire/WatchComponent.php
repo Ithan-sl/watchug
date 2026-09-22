@@ -46,7 +46,7 @@ class WatchComponent extends Component
         // 2. Se NÃO houver vídeos no banco de dados, utiliza os provedores configurados (MegaEmbed / mgeb.top)
         if ($listing->type == 'movie') {
             if (empty($this->videos) && config('settings.megaembed') == 'active' && !empty($listing->tmdb_id)) {
-                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '?player=vidstack';
+                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id;
                 $this->videos[] = [
                     'label' => 'Dublado',
                     'type' => 'embed',
@@ -64,7 +64,7 @@ class WatchComponent extends Component
         } elseif (isset($listing->post->type) && $listing->post->type == 'tv') {
             // 3. Episódio individual de série
             if (empty($this->videos) && config('settings.megaembed') == 'active' && !empty($listing->post->tmdb_id)) {
-                $rawLink = 'https://mgeb.top/embed/' . $listing->post->tmdb_id . '/' . $listing->season_number . '/' . $listing->episode_number . '?player=vidstack';
+                $rawLink = 'https://mgeb.top/embed/' . $listing->post->tmdb_id . '/' . $listing->season_number . '/' . $listing->episode_number;
                 $this->videos[] = [
                     'label' => 'Dublado',
                     'type' => 'embed',
@@ -110,7 +110,7 @@ class WatchComponent extends Component
                     }
                 }
             } elseif (config('settings.megaembed') == 'active' && !empty($listing->tmdb_id)) {
-                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '/' . $seasonNum . '/' . $episodeNum . '?player=vidstack';
+                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '/' . $seasonNum . '/' . $episodeNum;
                 $this->videos[] = [
                     'label' => 'Dublado' . $epSuffix,
                     'type' => 'embed',
