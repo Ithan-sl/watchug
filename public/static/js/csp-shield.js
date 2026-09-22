@@ -219,8 +219,15 @@
         }
     }, true);
 
+    // 7. Bloquear redirecionamentos automáticos forçados da janela principal (Top-level redirect guard)
+    window.addEventListener('beforeunload', function (e) {
+        if (!isInternalNav && isPlayerPage()) {
+            console.warn('[Anti-Popup Shield] Tentativa de redirecionamento automático não autorizada bloqueada.');
+            e.preventDefault();
+            return (e.returnValue = '');
+        }
+    });
+
     // Compatibilidade no-op caso scripts antigos tentem chamar rearmPlayerShield
     window.rearmPlayerShield = function () {};
-
-    window.onbeforeunload = null;
 })();
