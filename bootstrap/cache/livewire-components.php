@@ -1,0 +1,15 @@
+<?php return array (
+  'comment' => 'App\\Http\\Livewire\\Comment',
+  'comments' => 'App\\Http\\Livewire\\Comments',
+  'episodecalendar' => 'App\\Http\\Livewire\\Episodecalendar',
+  'like' => 'App\\Http\\Livewire\\Like',
+  'notify-component' => 'App\\Http\\Livewire\\NotifyComponent',
+  'post-filter' => 'App\\Http\\Livewire\\PostFilter',
+  'reaction-component' => 'App\\Http\\Livewire\\ReactionComponent',
+  'report-component' => 'App\\Http\\Livewire\\ReportComponent',
+  'search-component' => 'App\\Http\\Livewire\\SearchComponent',
+  'season-component' => 'App\\Http\\Livewire\\SeasonComponent',
+  'update-component' => 'App\\Http\\Livewire\\UpdateComponent',
+  'watch-component' => 'App\\Http\\Livewire\\WatchComponent',
+  'watchlist-component' => 'App\\Http\\Livewire\\WatchlistComponent',
+);
