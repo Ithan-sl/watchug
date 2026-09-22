@@ -41,11 +41,7 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 
 # Install dependencies and optimize autoload
-RUN if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then \
-        composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts; \
-    else \
-        composer dump-autoload --optimize --no-dev --no-scripts; \
-    fi
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

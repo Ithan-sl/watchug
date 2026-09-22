@@ -23,7 +23,8 @@ mkdir -p /var/www/html/storage/framework/cache/data \
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Package discovery and cache cleanup
+# Clear old bootstrap caches and discover packages
+rm -f /var/www/html/bootstrap/cache/*.php
 php artisan package:discover --ansi || true
 php artisan config:clear || true
 php artisan route:clear || true
