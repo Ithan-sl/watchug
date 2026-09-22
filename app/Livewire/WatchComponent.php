@@ -46,7 +46,7 @@ class WatchComponent extends Component
         // 2. Streams para filmes a partir do banco de dados (TMDB)
         if ($listing->type == 'movie') {
             if ($listing->tmdb_id) {
-                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id;
+                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '?player=vidstack';
                 $this->videos[] = [
                     'label' => empty($this->videos) ? 'Dublado' : 'Player Alternativo',
                     'type' => 'embed',
@@ -64,7 +64,7 @@ class WatchComponent extends Component
         } elseif (isset($listing->post->type) AND $listing->post->type == 'tv') {
             // 3. Streams para episódios individuais a partir do banco
             if ($listing->post->tmdb_id) {
-                $rawLink = 'https://mgeb.top/embed/' . $listing->post->tmdb_id . '/' . $listing->season_number . '/' . $listing->episode_number;
+                $rawLink = 'https://mgeb.top/embed/' . $listing->post->tmdb_id . '/' . $listing->season_number . '/' . $listing->episode_number . '?player=vidstack';
                 $this->videos[] = [
                     'label' => empty($this->videos) ? 'Dublado' : 'Player Alternativo',
                     'type' => 'embed',
@@ -112,7 +112,7 @@ class WatchComponent extends Component
             }
 
             if ($listing->tmdb_id) {
-                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '/' . $seasonNum . '/' . $episodeNum;
+                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '/' . $seasonNum . '/' . $episodeNum . '?player=vidstack';
                 $this->videos[] = [
                     'label' => (empty($this->videos) ? 'Dublado' : 'Player Alternativo') . $epSuffix,
                     'type' => 'embed',
