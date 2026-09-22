@@ -43,8 +43,16 @@ class WatchComponent extends Component
             }
         }
 
-        // 2. Streams opcionais para filmes (ex: vidsrc configurado no painel)
+        // 2. Se NÃO houver vídeos no banco de dados, utiliza os provedores configurados (MegaEmbed / mgeb.top)
         if ($listing->type == 'movie') {
+            if (empty($this->videos) && config('settings.megaembed') == 'active' && !empty($listing->tmdb_id)) {
+                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '?player=vidstack';
+                $this->videos[] = [
+                    'label' => 'Dublado',
+                    'type' => 'embed',
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => 'Dublado']),
+                ];
+            }
             if (config('settings.vidsrc') == 'active' && !empty($listing->tmdb_id)) {
                 $rawLink = 'https://vsembed.ru/embed/movie/' . $listing->tmdb_id . '/color-' . $theme_color;
                 $this->videos[] = [
@@ -54,7 +62,15 @@ class WatchComponent extends Component
                 ];
             }
         } elseif (isset($listing->post->type) && $listing->post->type == 'tv') {
-            // 3. Streams opcionais para episódios individuais
+            // 3. Episódio individual de série
+            if (empty($this->videos) && config('settings.megaembed') == 'active' && !empty($listing->post->tmdb_id)) {
+                $rawLink = 'https://mgeb.top/embed/' . $listing->post->tmdb_id . '/' . $listing->season_number . '/' . $listing->episode_number . '?player=vidstack';
+                $this->videos[] = [
+                    'label' => 'Dublado',
+                    'type' => 'embed',
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => 'Dublado']),
+                ];
+            }
             if (config('settings.vidsrc') == 'active' && !empty($listing->post->tmdb_id)) {
                 $rawLink = 'https://vsembed.ru/embed/tv/' . $listing->post->tmdb_id . '/' . $listing->season_number . '-' . $listing->episode_number . '/color-' . $theme_color;
                 $this->videos[] = [
@@ -76,7 +92,7 @@ class WatchComponent extends Component
             $episodeNum = $firstEpisode ? $firstEpisode->episode_number : 1;
             $epSuffix = ' (T' . $seasonNum . ':EP' . $episodeNum . ')';
 
-            if ($firstEpisode && isset($firstEpisode->videos)) {
+            if ($firstEpisode && isset($firstEpisode->videos) && $firstEpisode->videos->isNotEmpty()) {
                 foreach ($firstEpisode->videos as $video) {
                     $label = ($video->label ?? 'Stream') . $epSuffix;
                     if ($video->type == 'embed') {
@@ -93,6 +109,13 @@ class WatchComponent extends Component
                         ];
                     }
                 }
+            } elseif (config('settings.megaembed') == 'active' && !empty($listing->tmdb_id)) {
+                $rawLink = 'https://mgeb.top/embed/' . $listing->tmdb_id . '/' . $seasonNum . '/' . $episodeNum . '?player=vidstack';
+                $this->videos[] = [
+                    'label' => 'Dublado' . $epSuffix,
+                    'type' => 'embed',
+                    'link' => route('embed.server', ['t' => Crypt::encryptString($rawLink), 'label' => 'Dublado']),
+                ];
             }
 
             if (config('settings.vidsrc') == 'active' && !empty($listing->tmdb_id)) {
