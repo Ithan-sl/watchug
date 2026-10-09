@@ -181,6 +181,9 @@
         <div class="mb-5">
             <x-form.label for="player" :value="__('Player')"/>
             <x-form.select name="player">
+                <option value="jwplayer" @if(config('settings.player') == 'jwplayer' || empty(config('settings.player')))
+                    {{'selected'}}
+                    @endif>{{__('JW Player')}}</option>
                 <option value="vidstack" @if(config('settings.player') == 'vidstack')
                     {{'selected'}}
                     @endif>{{__('Vidstack Player')}}</option>

@@ -90,7 +90,96 @@
             ></iframe>
         </div>
     @else
-    @if(config('settings.player') == 'vidstack' || !in_array(config('settings.player'), ['videojs', 'plyr']))
+    @if(config('settings.player') == 'jwplayer' || !in_array(config('settings.player'), ['videojs', 'plyr', 'vidstack']))
+        @php
+            $poster = $listing->postable->post->coverurl ?? $listing->postable->coverurl ?? '';
+            $title = $listing->postable->title ?? $listing->postable->name ?? $listing->label ?? '';
+            if ($listing->type == 'hls' || str_contains($listing->link, '.m3u8')) {
+                $mediaSrc = route('stream.manifest', ['t' => \Illuminate\Support\Facades\Crypt::encryptString($listing->link)]);
+                $mediaType = 'hls';
+            } elseif ($listing->type == 'mp4' || str_contains($listing->link, '.mp4')) {
+                $mediaSrc = $listing->link;
+                $mediaType = 'mp4';
+            } else {
+                $mediaSrc = $listing->link;
+                $mediaType = null;
+            }
+        @endphp
+
+        <div class="w-full h-full aspect-video bg-black flex items-center justify-center relative overflow-hidden" id="jwplayer-wrapper">
+            <div id="jwplayer-container" class="w-full h-full"></div>
+        </div>
+
+        @push('style')
+            <style>
+                #jwplayer-wrapper, #jwplayer-container {
+                    width: 100% !important;
+                    height: 100% !important;
+                    max-width: 100% !important;
+                }
+                .jwplayer {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+            </style>
+        @endpush
+
+        @push('javascript')
+            <script src="{{ asset('static/js/player/jwplayer/jwplayer.js') }}"></script>
+            <script>
+                (function() {
+                    if (typeof jwplayer === 'undefined') {
+                        console.error('JW Player failed to load.');
+                        return;
+                    }
+
+                    jwplayer.key = "cLGMn8T20tGvW+0eXPhq4NNmLB57TrscPjd1IyJF84o=";
+
+                    var playerConfig = {
+                        file: "{{ $mediaSrc }}",
+                        @if(isset($mediaType))
+                        type: "{{ $mediaType }}",
+                        @endif
+                        image: "{{ $poster }}",
+                        title: "{{ addslashes($title) }}",
+                        width: "100%",
+                        height: "100%",
+                        aspectratio: "16:9",
+                        autostart: true,
+                        preload: "auto",
+                        controls: true,
+                        playbackRateControls: true,
+                        stretching: "uniform",
+                        @if(isset($listing->postable->subtitles) && count($listing->postable->subtitles) > 0)
+                        tracks: [
+                            @foreach($listing->postable->subtitles as $subtitle)
+                            {
+                                file: "{{ $subtitle->linkurl }}",
+                                label: "{{ $subtitle->country->name }}",
+                                kind: "captions",
+                                default: {{ $loop->first ? 'true' : 'false' }}
+                            },
+                            @endforeach
+                        ],
+                        @endif
+                        cast: {}
+                    };
+
+                    var playerInstance = jwplayer("jwplayer-container").setup(playerConfig);
+
+                    playerInstance.on('setupError', function(e) {
+                        console.warn('[JWPlayer] Setup error, attempting raw source fallback:', e);
+                        @if($listing->type == 'hls' || str_contains($listing->link, '.m3u8'))
+                        if (playerConfig.file !== "{{ $listing->link }}") {
+                            playerConfig.file = "{{ $listing->link }}";
+                            jwplayer("jwplayer-container").setup(playerConfig);
+                        }
+                        @endif
+                    });
+                })();
+            </script>
+        @endpush
+    @elseif(config('settings.player') == 'vidstack')
         @php
             $poster = $listing->postable->post->coverurl ?? $listing->postable->coverurl ?? '';
             $title = $listing->postable->title ?? $listing->postable->name ?? $listing->label ?? '';
